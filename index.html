@@ -16,7 +16,6 @@
             color: #fff;
         }
 
-        /* 半透明背景层 */
         .overlay {
             background: rgba(0,0,0,0.55);
             min-height: 100vh;
@@ -56,15 +55,13 @@
             100% { transform: translateY(100vh) rotate(360deg); }
         }
 
-        /* 内容容器 */
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* 小说卡片 */
-        .book-card {
+        .card {
             background: rgba(255,255,255,0.15);
             border-radius: 15px;
             padding: 25px;
@@ -73,11 +70,11 @@
             transition: transform 0.3s;
         }
 
-        .book-card:hover {
+        .card:hover {
             transform: translateY(-8px);
         }
 
-        .book-card h2 {
+        .card h2 {
             margin-top: 0;
             font-size: 28px;
         }
@@ -90,47 +87,6 @@
 
         a:hover {
             text-decoration: underline;
-        }
-
-        /* 作者介绍 */
-        .author-section {
-            background: rgba(255,255,255,0.15);
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 40px;
-            backdrop-filter: blur(8px);
-        }
-
-        /* 留言区 */
-        .comment-box {
-            background: rgba(255,255,255,0.15);
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 40px;
-            backdrop-filter: blur(8px);
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            border-radius: 10px;
-            border: none;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            border: none;
-            background: #aac8ff;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #cce0ff;
         }
     </style>
 </head>
@@ -152,25 +108,18 @@
 
     <div class="container">
 
-        <!-- 小说展示 -->
-        <div class="book-card">
+        <!-- 小说入口 -->
+        <div class="card">
             <h2>《梦雪》</h2>
             <p>一段关于雪、梦境与命运的故事。</p>
             <a href="novels/novel1/index.html">开始阅读 →</a>
         </div>
 
         <!-- 作者介绍 -->
-        <div class="author-section">
+        <div class="card">
             <h2>作者介绍</h2>
             <p>这里可以写你的作者简介，例如你的创作理念、你的世界观、你为什么写这本小说。</p>
             <a href="author.html">查看完整作者页面 →</a>
-        </div>
-
-        <!-- 留言区 -->
-        <div class="comment-box">
-            <h2>留言区</h2>
-            <textarea placeholder="写下你的想法、评论或建议..."></textarea>
-            <button onclick="alert('留言功能需要后端支持，GitHub Pages 不支持，但我可以帮你用第三方留言系统实现！')">提交留言</button>
         </div>
 
     </div>
