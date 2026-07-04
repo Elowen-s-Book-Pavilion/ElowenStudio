@@ -4,184 +4,260 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>书雪书阁 | Elowen’s Book Pavilion</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
 <style>
-  :root{--glass:rgba(255,255,255,0.10);--accent:#ffd9a6;--text:#fff}
-  html,body{height:100%;margin:0;font-family:"Noto Serif SC",serif;background:#071018;color:var(--text);-webkit-font-smoothing:antialiased}
-  /* 背景：窗外雪夜 + 暖灯反光 */
-  body{
+  :root{
+    --glass: rgba(255,255,255,0.12);
+    --accent: #ffd9a6;
+    --text: #fff;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Serif SC", serif;
+    color: var(--text);
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 背景：木屋 · 湖面 · 森林 · 冬季 · 夜景 · 暖灯光 */
+  body {
     background:
-      linear-gradient(180deg, rgba(2,6,12,0.72) 0%, rgba(2,6,12,0.72) 60%),
-      radial-gradient(700px 360px at 82% 18%, rgba(255,170,90,0.12), transparent 18%),
-      url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80') center/cover fixed;
-    overflow-x:hidden;
-    /* 允许纵向滚动（不要把 overflow-y 设为 hidden） */
-    overflow-y:auto;
+      linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+      url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80')
+      center/cover fixed;
   }
 
-  .hero{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:24px;
-    box-sizing:border-box;
-    transition:all .45s ease;
-    position:relative;
+  /* 顶部区域 */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 24px;
+    box-sizing: border-box;
+    transition: all .45s ease;
+    position: relative;
   }
-  .hero h1{font-family:"Playfair Display",serif;font-size:56px;margin:0 0 8px;letter-spacing:2px;text-shadow:0 8px 24px rgba(0,0,0,0.6)}
-  .hero p{margin:0;font-size:18px;opacity:.95}
 
-  .scroll-hint{position:absolute;bottom:28px;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transform:translateY(0);transition:opacity .45s ease, transform .45s ease;pointer-events:none}
-  .scroll-hint.show{opacity:.85}
-  .scroll-hint .arrow{width:22px;height:22px;border-left:2px solid rgba(255,255,255,0.9);border-bottom:2px solid rgba(255,255,255,0.9);transform:rotate(-45deg);animation:bounce 1.6s infinite}
-  .scroll-hint .text{font-size:13px;color:rgba(255,255,255,0.85);letter-spacing:0.6px}
-  @keyframes bounce{0%{transform:translateY(0) rotate(-45deg)}50%{transform:translateY(8px) rotate(-45deg)}100%{transform:translateY(0) rotate(-45deg)}}
+  .hero h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 56px;
+    margin: 0 0 8px;
+    letter-spacing: 2px;
+    text-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
 
-  .hero.shrink{height:72px;position:fixed;top:0;left:0;right:0;background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));backdrop-filter: blur(6px);z-index:999;padding:10px 20px}
-  .hero.shrink h1{font-size:22px}
+  .hero p {
+    margin: 0;
+    font-size: 18px;
+    opacity: .95;
+  }
 
-  /* 占位元素（用于避免固定时页面跳动） */
-  #hero-placeholder{height:0;transition:height .45s ease}
+  /* 下滑提示 */
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    opacity: 0;
+    transition: opacity .45s ease;
+    pointer-events: none;
+    text-align: center;
+  }
 
-  main{max-width:980px;margin:0 auto;padding:40px 20px;box-sizing:border-box;min-height:60vh}
-  .content{opacity:0;transform:translateY(30px);transition:all .6s ease}
-  .content.show{opacity:1;transform:translateY(0)}
+  .scroll-hint.show { opacity: .85; }
 
-  .card{background:var(--glass);border-radius:12px;padding:22px;margin-bottom:20px;backdrop-filter:blur(6px);transition:transform .25s, box-shadow .25s}
-  .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.45)}
-  .card h2{margin:0 0 8px;font-size:24px}
-  .card p{margin:0 0 12px;color:rgba(255,255,255,0.92)}
-  .card a{color:var(--accent);font-weight:600;text-decoration:none}
-  .card a:hover{text-decoration:underline}
+  .scroll-hint .arrow {
+    width: 22px;
+    height: 22px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg);
+    margin: 0 auto;
+    animation: bounce 1.6s infinite;
+  }
 
-  /* 雪花（不拦截点击） */
-  .snowflake{position:fixed;top:-10px;color:#f7fbff;opacity:0.95;pointer-events:none;will-change:transform,opacity;animation-name:fall;animation-timing-function:linear;animation-iteration-count:1;text-shadow:0 1px 2px rgba(0,0,0,0.35);z-index:800}
-  @keyframes fall{0%{transform:translateY(-10vh) translateX(0) rotate(0deg);opacity:0.95}70%{opacity:0.95}100%{transform:translateY(110vh) translateX(var(--drift,40px)) rotate(360deg);opacity:0.9}}
+  @keyframes bounce {
+    0% { transform: translateY(0) rotate(-45deg); }
+    50% { transform: translateY(8px) rotate(-45deg); }
+    100% { transform: translateY(0) rotate(-45deg); }
+  }
 
-  @media (max-width:600px){.hero h1{font-size:34px}.hero p{font-size:15px}.card h2{font-size:20px}}
+  /* 固定导航栏 */
+  .hero.shrink {
+    height: 72px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    padding: 10px 20px;
+    z-index: 999;
+  }
 
-  .skip{position:absolute;left:-999px}.skip:focus{left:10px;top:10px;background:#000;padding:8px;border-radius:4px;color:#fff;z-index:10000}
+  .hero.shrink h1 {
+    font-size: 22px;
+  }
+
+  /* 占位元素 */
+  #hero-placeholder {
+    height: 0;
+    transition: height .45s ease;
+  }
+
+  /* 内容区 */
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  .content {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all .6s ease;
+  }
+
+  .content.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card {
+    background: var(--glass);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(6px);
+    transition: transform .25s, box-shadow .25s;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  }
+
+  .card h2 {
+    margin: 0 0 8px;
+    font-size: 24px;
+  }
+
+  .card p {
+    margin: 0 0 12px;
+    color: rgba(255,255,255,0.92);
+  }
+
+  .card a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .card a:hover {
+    text-decoration: underline;
+  }
+
+  /* 雪花 */
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: #fff;
+    opacity: 0.9;
+    pointer-events: none;
+    animation: fall linear infinite;
+    z-index: 1001;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10vh) translateX(0) rotate(0deg); }
+    100% { transform: translateY(110vh) translateX(40px) rotate(360deg); }
+  }
+
 </style>
 </head>
+
 <body>
-  <a class="skip" href="#main">跳过到内容</a>
 
-  <header class="hero" id="hero" role="banner" aria-label="网站顶部">
-    <h1>书雪书阁 · Elowen’s Book Pavilion</h1>
-    <p>窗外雪落，灯下故事正在等你</p>
+<header class="hero" id="hero">
+  <h1>书雪书阁 · Elowen’s Book Pavilion</h1>
+  <p>窗外雪落，灯下故事正在等你</p>
 
-    <div class="scroll-hint" id="scrollHint" aria-hidden="true">
-      <div class="arrow" aria-hidden="true"></div>
-      <div class="text">轻轻向下</div>
-    </div>
-  </header>
+  <div class="scroll-hint" id="scrollHint">
+    <div class="arrow"></div>
+    <div class="text">轻轻向下</div>
+  </div>
+</header>
 
-  <!-- 占位元素：当 hero 固定时设置高度，避免页面跳动 -->
-  <div id="hero-placeholder" aria-hidden="true"></div>
+<div id="hero-placeholder"></div>
 
-  <main id="main" class="content" role="main" aria-labelledby="main-title">
-    <!-- 增加内容高度以确保可滚动（示例） -->
-    <section class="card" aria-labelledby="novel-title">
-      <h2 id="novel-title">《梦雪》</h2>
-      <p>一段关于雪、梦境与命运的短篇连载。点击进入阅读完整章节（新标签页打开）。</p>
-      <a href="novels/novel1/index.html" target="_blank" rel="noopener noreferrer">开始阅读 →（新标签页）</a>
-    </section>
+<main class="content" id="content">
 
-    <section class="card" aria-labelledby="author-title">
-      <h2 id="author-title">作者 · Elowen</h2>
-      <p>了解作者、创作理念与留言互动。你可以在作者页给作者留言，作者可以回复读者。</p>
-      <a href="author.html">查看作者页面 →</a>
-    </section>
+  <section class="card">
+    <h2>《梦雪》</h2>
+    <p>一段关于雪、梦境与命运的故事。</p>
+    <a href="novels/novel1/index.html" target="_blank">开始阅读 →</a>
+  </section>
 
-    <!-- 额外占位内容（示例用，确保页面足够长以便测试滚动） -->
-    <div style="height:800px"></div>
-  </main>
+  <section class="card">
+    <h2>作者介绍</h2>
+    <p>了解作者、创作理念与留言互动。</p>
+    <a href="author.html">查看作者页面 →</a>
+  </section>
+
+</main>
 
 <script>
-/* 雪花（恢复并优化） */
+/* 雪花 */
 (function(){
-  const maxSnow = 18;
-  const lifetime = 10000;
-  let active = 0;
-
   function createSnow(){
-    if(active >= maxSnow) return;
-    active++;
     const el = document.createElement('div');
     el.className = 'snowflake';
     el.textContent = '❄';
-
-    const left = Math.random() * window.innerWidth;
-    const size = 10 + Math.random() * 22;
-    const duration = 5 + Math.random() * 7;
-    const drift = (Math.random() - 0.5) * 160;
-
-    el.style.left = left + 'px';
-    el.style.fontSize = size + 'px';
-    el.style.animationDuration = duration + 's';
-    el.style.setProperty('--drift', drift + 'px');
-
+    el.style.left = Math.random() * window.innerWidth + 'px';
+    el.style.fontSize = (10 + Math.random() * 20) + 'px';
+    el.style.animationDuration = (4 + Math.random() * 6) + 's';
     document.body.appendChild(el);
-
-    function cleanup(){
-      el.removeEventListener('animationend', cleanup);
-      if(el.parentNode) el.parentNode.removeChild(el);
-      active = Math.max(0, active - 1);
-    }
-    el.addEventListener('animationend', cleanup);
-
-    setTimeout(()=>{ if(el.parentNode) { el.parentNode.removeChild(el); active = Math.max(0, active - 1); } }, lifetime + 2000);
+    setTimeout(()=> el.remove(), 10000);
   }
-
-  for(let i=0;i<6;i++) setTimeout(createSnow, i*300);
-  setInterval(createSnow, 700);
+  setInterval(createSnow, 150);
 })();
 
-/* 滚动与占位逻辑（避免反弹，确保可停留） */
+/* 滚动逻辑 */
 (function(){
   const hero = document.getElementById('hero');
   const placeholder = document.getElementById('hero-placeholder');
-  const content = document.querySelector('.content');
+  const content = document.getElementById('content');
   const hint = document.getElementById('scrollHint');
 
-  setTimeout(()=> hint.classList.add('show'), 700);
+  setTimeout(()=> hint.classList.add('show'), 600);
 
   function apply(){
     if(window.scrollY > 100){
       if(!hero.classList.contains('shrink')){
-        hero.classList.add('shrink');
-        // 设置占位高度等于 hero 固定前的高度，避免页面回弹
         const h = hero.getBoundingClientRect().height;
         placeholder.style.height = h + 'px';
+        hero.classList.add('shrink');
       }
       content.classList.add('show');
       hint.classList.remove('show');
     } else {
-      if(hero.classList.contains('shrink')){
-        hero.classList.remove('shrink');
-        placeholder.style.height = '0';
-      }
+      hero.classList.remove('shrink');
+      placeholder.style.height = '0';
       content.classList.remove('show');
       hint.classList.add('show');
     }
   }
 
-  // 优化滚动回调
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if(!ticking){
-      window.requestAnimationFrame(()=>{ apply(); ticking=false; });
-      ticking = true;
-    }
-  }, {passive:true});
-
-  // 初始检查（页面刷新时）
+  window.addEventListener('scroll', ()=> requestAnimationFrame(apply));
   document.addEventListener('DOMContentLoaded', apply);
-  window.addEventListener('resize', apply);
 })();
 </script>
+
 </body>
 </html>
