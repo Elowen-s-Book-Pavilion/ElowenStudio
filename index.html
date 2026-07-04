@@ -10,7 +10,7 @@
 
     <style>
         :root {
-            --glass-bg: rgba(255,255,255,0.15);
+            --glass-bg: rgba(255,255,255,0.12);
             --glass-blur: 8px;
             --text-color: #fff;
         }
@@ -22,7 +22,10 @@
         body {
             margin: 0;
             font-family: "Noto Serif SC", serif;
-            background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+            /* 更暗的背景：图片 + 深色渐变叠加，保证雪花与文字对比 */
+            background:
+                linear-gradient(rgba(2,8,20,0.65), rgba(2,8,20,0.65)),
+                url('https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
             background-size: cover;
             color: var(--text-color);
             overflow-x: hidden;
@@ -40,6 +43,7 @@
             text-align: center;
             transition: all 0.6s ease;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         .hero h1 {
@@ -67,7 +71,7 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 10;
+            z-index: 999;
             padding: 10px 20px;
         }
 
@@ -89,6 +93,7 @@
             opacity: 0;
             transform: translateY(40px);
             transition: all 1s ease;
+            box-sizing: border-box;
         }
 
         .content.show {
@@ -129,13 +134,14 @@
         .snowflake {
             position: fixed;
             top: -10px;
-            color: white;
-            opacity: 0.85;
+            color: #f7fbff;
+            opacity: 0.9;
             pointer-events: none;
             will-change: transform, opacity;
             animation-name: fall;
             animation-timing-function: linear;
             animation-iteration-count: 1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
         }
 
         @keyframes fall {
@@ -199,11 +205,11 @@
         </div>
     </main>
 
-    <!-- 雪花生成脚本（放在文档末尾以提升首屏加载） -->
+    <!-- 雪花生成脚本 -->
     <script>
         (function () {
-            const maxSnowflakes = 18;
-            const lifetime = 9000; // ms
+            const maxSnowflakes = 14; // 降低密度，提升性能
+            const lifetime = 10000; // ms
             let active = 0;
 
             function createSnowflake() {
@@ -214,11 +220,10 @@
                 el.className = 'snowflake';
                 el.textContent = '❄';
 
-                // 随机位置、大小、速度与漂移
                 const left = Math.random() * window.innerWidth;
                 const size = 10 + Math.random() * 22;
                 const duration = 5 + Math.random() * 7; // seconds
-                const drift = (Math.random() - 0.5) * 120; // px
+                const drift = (Math.random() - 0.5) * 140; // px
 
                 el.style.left = left + 'px';
                 el.style.fontSize = size + 'px';
@@ -227,7 +232,6 @@
 
                 document.body.appendChild(el);
 
-                // 在动画结束时移除元素并更新计数
                 function cleanup() {
                     el.removeEventListener('animationend', cleanup);
                     if (el.parentNode) el.parentNode.removeChild(el);
@@ -235,7 +239,7 @@
                 }
                 el.addEventListener('animationend', cleanup);
 
-                // 保险回收（防止 animationend 未触发）
+                // 保险回收
                 setTimeout(() => {
                     if (el.parentNode) {
                         el.parentNode.removeChild(el);
@@ -248,42 +252,48 @@
             for (let i = 0; i < 6; i++) {
                 setTimeout(createSnowflake, i * 300);
             }
-            setInterval(createSnowflake, 400);
+            setInterval(createSnowflake, 600);
         })();
     </script>
 
-    <!-- 滚动与显示逻辑 -->
+    <!-- 滚动与显示逻辑（修复遮挡问题：当 hero 固定时给 body 添加等高 padding） -->
     <script>
         (function () {
             const hero = document.getElementById('hero');
             const content = document.getElementById('content');
-            let ticking = false;
 
-            function onScroll() {
+            function applyLayout() {
+                if (window.scrollY > 100) {
+                    if (!hero.classList.contains('shrink')) {
+                        hero.classList.add('shrink');
+                    }
+                    content.classList.add('show');
+
+                    // 给 body 添加上内边距，避免固定的 hero 遮挡内容
+                    const h = hero.getBoundingClientRect().height;
+                    document.body.style.paddingTop = h + 'px';
+                } else {
+                    hero.classList.remove('shrink');
+                    content.classList.remove('show');
+                    document.body.style.paddingTop = '';
+                }
+            }
+
+            // 使用 requestAnimationFrame 优化滚动回调
+            let ticking = false;
+            window.addEventListener('scroll', () => {
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
-                        if (window.scrollY > 100) {
-                            hero.classList.add('shrink');
-                            content.classList.add('show');
-                        } else {
-                            hero.classList.remove('shrink');
-                            content.classList.remove('show');
-                        }
+                        applyLayout();
                         ticking = false;
                     });
                     ticking = true;
                 }
-            }
+            }, { passive: true });
 
-            window.addEventListener('scroll', onScroll, { passive: true });
-
-            // 如果页面加载时已滚动，立即应用状态
-            document.addEventListener('DOMContentLoaded', () => {
-                if (window.scrollY > 100) {
-                    hero.classList.add('shrink');
-                    content.classList.add('show');
-                }
-            });
+            // 初始检查（页面刷新时如果已滚动）
+            document.addEventListener('DOMContentLoaded', applyLayout);
+            window.addEventListener('resize', applyLayout);
         })();
     </script>
 </body>
