@@ -1,84 +1,220 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>作者介绍 | 书雪书阁</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            margin: 0;
-            font-family: "Noto Serif SC", serif;
-            background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-        }
-
-        .overlay {
-            background: rgba(0,0,0,0.55);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.15);
-            border-radius: 15px;
-            padding: 30px;
-            backdrop-filter: blur(8px);
-        }
-
-        h1 {
-            font-family: "Playfair Display", serif;
-            font-size: 42px;
-            text-align: center;
-            margin-top: 0;
-        }
-
-        p {
-            font-size: 18px;
-            line-height: 1.8;
-        }
-
-        a {
-            color: #cce0ff;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .back {
-            margin-top: 30px;
-            text-align: center;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>作者 · Elowen — 书雪书阁</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:rgba(2,6,12,0.95);--card:rgba(255,255,255,0.06);--accent:#ffd9a6}
+  body{margin:0;font-family:"Noto Serif SC",serif;background:linear-gradient(180deg, #07101a, #02060a);color:#fff;min-height:100vh;padding:28px}
+  main{max-width:900px;margin:0 auto}
+  h1{font-family:"Playfair Display",serif}
+  .author-card{background:var(--card);padding:18px;border-radius:12px;margin-bottom:18px}
+  .note{color:rgba(255,255,255,0.85)}
+  form{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+  input[type="text"],textarea{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;min-height:44px}
+  button{background:var(--accent);border:none;padding:10px 14px;border-radius:8px;font-weight:600;cursor:pointer}
+  .comments{margin-top:12px;display:flex;flex-direction:column;gap:12px}
+  .comment{background:rgba(255,255,255,0.03);padding:12px;border-radius:10px}
+  .meta{font-size:13px;color:rgba(255,255,255,0.65);margin-bottom:6px}
+  .reply{margin-top:8px;padding:10px;background:rgba(255,200,120,0.06);border-left:3px solid rgba(255,200,120,0.18);border-radius:6px}
+  .author-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  .small{font-size:13px;color:rgba(255,255,255,0.7)}
+  .login{display:flex;gap:8px;align-items:center}
+  .reply-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 8px;border-radius:6px;color:#fff;cursor:pointer}
+</style>
 </head>
-
 <body>
-<div class="overlay">
-    <div class="container">
+<main>
+  <h1>作者 · Elowen</h1>
+  <div class="author-card">
+    <p class="note">你好，我是 Elowen。写作源自夜与灯下的沉思。欢迎留言交流。</p>
+    <p class="small">在此页面你可以给作者留言；作者登录后可以回复留言（示例为本地存储实现）。</p>
+  </div>
 
-        <div class="card">
-            <h1>作者介绍</h1>
+  <!-- 留言表单 -->
+  <section aria-labelledby="leave-title">
+    <h2 id="leave-title">给作者留言</h2>
+    <form id="commentForm">
+      <input type="text" id="name" placeholder="你的名字（可匿名）" maxlength="40">
+      <textarea id="message" placeholder="写下你的留言..." required></textarea>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button type="submit">发布留言</button>
+        <div class="small">留言将保存在本地（示例）。</div>
+      </div>
+    </form>
+  </section>
 
-            <p>这里可以写你的作者简介，例如你的创作理念、你的世界观、你为什么写《梦雪》。</p>
-            <p>你可以介绍你的写作风格、你喜欢的题材、你对“书雪书阁”这个世界的构想。</p>
-            <p>也可以写一些你想对读者说的话，让他们更了解你的创作旅程。</p>
-
-            <div class="back">
-                <a href="index.html">← 返回首页</a>
-            </div>
-        </div>
-
+  <!-- 作者登录（用于回复） -->
+  <section aria-labelledby="author-login">
+    <h2 id="author-login">作者登录（回复留言）</h2>
+    <div class="author-controls">
+      <div class="login">
+        <input id="authorPass" type="password" placeholder="输入作者密码以启用回复" style="padding:8px;border-radius:6px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff">
+        <button id="loginBtn" class="reply-btn">登录</button>
+      </div>
+      <div class="small" id="loginStatus">未登录</div>
     </div>
-</div>
+  </section>
+
+  <!-- 留言列表 -->
+  <section aria-labelledby="comments-title">
+    <h2 id="comments-title">读者留言</h2>
+    <div id="comments" class="comments" aria-live="polite"></div>
+  </section>
+</main>
+
+<script>
+/*
+  简单本地留言系统（示例）
+  - comments 存储在 localStorage（key: book_comments）
+  - 每条 comment: {id, name, message, time, replies: [{id, text, time}]}
+  - 作者登录：示例密码为 "el0wen-secret"（你可改）
+  - 登录后会显示回复按钮，回复会被保存并显示
+*/
+(function(){
+  const STORAGE_KEY = 'book_comments';
+  const AUTHOR_PASSWORD = 'el0wen-secret'; // 请上线前改为更安全的方式（示例）
+  let isAuthor = false;
+
+  const form = document.getElementById('commentForm');
+  const nameInput = document.getElementById('name');
+  const msgInput = document.getElementById('message');
+  const commentsEl = document.getElementById('comments');
+  const loginBtn = document.getElementById('loginBtn');
+  const passInput = document.getElementById('authorPass');
+  const loginStatus = document.getElementById('loginStatus');
+
+  function loadComments(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveComments(list){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+  function render(){
+    const list = loadComments();
+    commentsEl.innerHTML = '';
+    if(list.length === 0){
+      commentsEl.innerHTML = '<div class="small">还没有留言，成为第一个吧。</div>';
+      return;
+    }
+    list.slice().reverse().forEach(c => {
+      const el = document.createElement('div');
+      el.className = 'comment';
+      el.innerHTML = `
+        <div class="meta"><strong>${escapeHtml(c.name || '匿名')}</strong> · ${new Date(c.time).toLocaleString()}</div>
+        <div class="text">${escapeHtml(c.message)}</div>
+      `;
+      // replies
+      if(c.replies && c.replies.length){
+        c.replies.forEach(r => {
+          const rEl = document.createElement('div');
+          rEl.className = 'reply';
+          rEl.innerHTML = `<div class="meta"><strong>作者回复</strong> · ${new Date(r.time).toLocaleString()}</div><div class="text">${escapeHtml(r.text)}</div>`;
+          el.appendChild(rEl);
+        });
+      }
+      // 如果作者已登录，显示回复按钮
+      if(isAuthor){
+        const btn = document.createElement('button');
+        btn.className = 'reply-btn';
+        btn.textContent = '回复';
+        btn.style.marginTop = '8px';
+        btn.addEventListener('click', ()=> openReplyBox(c.id, el));
+        el.appendChild(btn);
+      }
+      commentsEl.appendChild(el);
+    });
+  }
+
+  function openReplyBox(commentId, containerEl){
+    // 防止重复打开
+    if(containerEl.querySelector('.reply-box')) return;
+    const box = document.createElement('div');
+    box.className = 'reply-box';
+    box.style.marginTop = '8px';
+    box.innerHTML = `
+      <textarea placeholder="写下你的回复..." style="width:100%;min-height:70px;padding:8px;border-radius:6px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="reply-send">发送回复</button>
+        <button class="reply-cancel" style="background:transparent;border:1px solid rgba(255,255,255,0.06)">取消</button>
+      </div>
+    `;
+    containerEl.appendChild(box);
+    const ta = box.querySelector('textarea');
+    box.querySelector('.reply-cancel').addEventListener('click', ()=> box.remove());
+    box.querySelector('.reply-send').addEventListener('click', ()=>{
+      const text = ta.value.trim();
+      if(!text) return alert('回复不能为空');
+      addReply(commentId, text);
+      box.remove();
+    });
+  }
+
+  function addReply(commentId, text){
+    const list = loadComments();
+    const idx = list.findIndex(c => c.id === commentId);
+    if(idx === -1) return;
+    const reply = { id: 'r_' + Date.now(), text, time: Date.now() };
+    list[idx].replies = list[idx].replies || [];
+    list[idx].replies.push(reply);
+    saveComments(list);
+    render();
+  }
+
+  function addComment(name, message){
+    const list = loadComments();
+    const comment = { id: 'c_' + Date.now(), name: name || '匿名', message, time: Date.now(), replies: [] };
+    list.push(comment);
+    saveComments(list);
+    render();
+  }
+
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    const msg = msgInput.value.trim();
+    if(!msg) return alert('留言不能为空');
+    addComment(name, msg);
+    msgInput.value = '';
+    nameInput.value = '';
+  });
+
+  loginBtn.addEventListener('click', ()=>{
+    const val = passInput.value || '';
+    if(val === AUTHOR_PASSWORD){
+      isAuthor = true;
+      loginStatus.textContent = '已以作者身份登录';
+      passInput.value = '';
+      render();
+    } else {
+      alert('密码错误（示例）。');
+    }
+  });
+
+  // XSS 简单转义
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+  }
+
+  // 初始化示例数据（如果没有）
+  (function initDemo(){
+    const list = loadComments();
+    if(list.length === 0){
+      const demo = [
+        { id:'c_demo1', name:'读者A', message:'喜欢你的文笔，期待下一章。', time: Date.now()-86400000, replies:[] },
+        { id:'c_demo2', name:'读者B', message:'窗外的雪景写得很美。', time: Date.now()-3600000, replies:[] }
+      ];
+      saveComments(demo);
+    }
+    render();
+  })();
+
+})();
+</script>
 </body>
 </html>
